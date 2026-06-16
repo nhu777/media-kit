@@ -1,0 +1,63 @@
+---
+alwaysApply: true
+---
+
+# AGENTS.md
+
+## Purpose
+
+**Product design and frontend prototyping project.** Focus on visual fidelity and rapid iteration.
+
+Not production code — ignore scale, security, backend, and deployment concerns.
+
+## Tech Stack
+
+- Next.js 15 (App Router, Turbopack) + React 18 + TypeScript
+- Tailwind CSS + Arbor Design System (`@linktr.ee/arbor`, `@linktr.ee/design-tokens`)
+- Phosphor Icons (`@phosphor-icons/react`) + Radix UI primitives
+- Framer Motion for animations
+
+## Setup & Commands
+
+```bash
+# First time: npm login for @linktr.ee packages, then:
+yarn setup
+
+# Development
+yarn dev      # localhost:3000 (Turbopack)
+yarn build    # Type-check and build
+yarn lint     # ESLint
+yarn format   # Prettier
+```
+
+## Data & State
+
+**Mock data** lives in `lib/`:
+- `editorData.ts` — Pages, links, themes (`pagesData`, `Page`, `Link`)
+- `linkData.ts` — Link types and detailed mock links (`LinkData`, `mockLinks`)
+
+**State management** uses React Context in `components/editor/shared/`:
+- `EditorThemeContext.tsx` — Theme/styling
+- `LinksContext.tsx` — Links data
+- `ProfileHeaderContext.tsx` — Profile header
+
+## Guidelines
+
+Read files in `agent-rules/` BEFORE implementing if the task involves their domain:
+
+| File                     | When to read                                            |
+| ------------------------ | ------------------------------------------------------- |
+| `ARBOR.mdc`              | Typography, colors, shadows, Arbor tokens over Tailwind |
+| `FIGMA.mdc`              | Translating Figma designs to code                       |
+| `web-best-practices.mdc` | Interactions, accessibility, animations, layout         |
+
+## Key Patterns
+
+- **Check before creating**: Search `shared/`, `link-block/`, `edit-block/`, `profile/`, and `ui/` before building new components
+- **Arbor tokens first**: Prefer `text-body-sm`, `bg-primary`, `shadow-elevation-200` over raw Tailwind values
+- **Use clsx for Arbor tokens**: The `cn()` helper strips custom `text-body-*` classes — use `clsx()` directly
+- **Phosphor icons in IconButton**: Cast icons — `icon={PlusIcon as IconComponent}`
+
+## Important
+
+**Don't over-engineer** — stay focused on the task, ask questions until you have all the information you need.

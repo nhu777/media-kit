@@ -1,0 +1,359 @@
+# Cursor Rules for Baby Linktree Project
+
+## Typography Guidelines
+
+### Use Arbor Design System Typography Classes
+
+**ALWAYS** prefer arbor typography tokens over individual Tailwind utility classes for typography.
+
+#### Available Arbor Typography Classes:
+
+**Title Classes:**
+
+- `text-title-xl` - 36px, bold, -0.54px tracking, 40px line-height
+- `text-title-lg` - 30px, bold, -0.45px tracking, 36px line-height
+- `text-title-md` - 24px, bold, -0.36px tracking, 28px line-height
+- `text-title-sm` - 20px, bold, -0.2px tracking, 24px line-height
+
+**Body Classes:**
+
+- `text-body-lg` - 18px, normal, 0.09px tracking, 24px line-height
+- `text-body-lg-emph` - 18px, medium, 0.09px tracking, 24px line-height
+- `text-body-base` - 16px, normal, 0.16px tracking, 20px line-height
+- `text-body-base-emph` - 16px, medium, 0.16px tracking, 20px line-height
+- `text-body-sm` - 14px, normal, 0.21px tracking, 20px line-height
+- `text-body-sm-emph` - 14px, medium, 0.21px tracking, 20px line-height
+- `text-body-xs` - 12px, normal, 0.21px tracking, 16px line-height
+- `text-body-xs-emph` - 12px, medium, 0.21px tracking, 16px line-height
+- `text-body-xxs` - 10px, normal, 0.2px tracking, 16px line-height
+- `text-body-xxs-emph` - 10px, medium, 0.2px tracking, 12px line-height
+
+#### Typography Replacement Rules:
+
+**NEVER use these combinations - replace with arbor tokens:**
+
+❌ **Don't use:**
+
+```css
+font-medium text-[14px] leading-[20px] tracking-[0.175px]
+font-normal text-[14px] leading-[20px] tracking-[0.21px]
+font-medium text-[16px] leading-[20px] tracking-[0.16px]
+font-normal text-[16px] leading-[20px] tracking-[0.16px]
+font-medium text-[18px] leading-[24px] tracking-[0.09px]
+font-normal text-[18px] leading-[24px] tracking-[0.09px]
+```
+
+✅ **Use instead:**
+
+```css
+text-body-sm-emph
+text-body-sm
+text-body-base-emph
+text-body-base
+text-body-lg-emph
+text-body-lg
+```
+
+#### Implementation Guidelines:
+
+1. **When creating new components:** Always use arbor typography classes from the start
+2. **When editing existing components:** Replace individual typography utilities with arbor tokens
+3. **Color classes:** Keep separate - arbor tokens only handle font properties (size, weight, line-height, letter-spacing)
+4. **Other utilities:** Keep layout, spacing, and other non-typography utilities as-is
+5. **Use `clsx` not `cn` for typography:** The `cn()` helper uses `tailwind-merge` which strips custom `text-body-*` classes — use `clsx()` directly when applying Arbor typography tokens
+
+#### Example Transformations:
+
+```tsx
+// Before
+<div className="font-medium text-[14px] leading-[20px] tracking-[0.175px] text-gray-600">
+  Title Text
+</div>
+
+// After
+<div className="text-body-sm-emph text-secondary">
+  Title Text
+</div>
+```
+
+```tsx
+// Before
+<p className="font-normal text-[16px] leading-[20px] tracking-[0.16px] text-gray-600">
+  Body text content
+</p>
+
+// After
+<p className="text-body-base text-secondary">
+  Body text content
+</p>
+```
+
+## Color Guidelines
+
+### Use Arbor Design System Color Classes
+
+**ALWAYS** prefer arbor semantic color tokens over individual Tailwind color utilities for colors.
+
+#### Available Arbor Color Categories:
+
+**Semantic Background Colors:**
+
+- `bg-primary` - Primary background (light/dark adaptive)
+- `bg-secondary` - Secondary background
+- `bg-tertiary` - Tertiary background
+- `bg-quaternary` - Quaternary background
+- `bg-elevated` - Elevated surfaces (modals, cards)
+- `bg-inverse` - Inverse background
+- `bg-btnPrimary` - Primary button background
+- `bg-accent` - Accent background
+- `bg-danger` / `bg-dangerSubtle` - Error/danger backgrounds
+- `bg-success` / `bg-successSubtle` - Success backgrounds
+- `bg-warning` / `bg-warningSubtle` - Warning backgrounds
+- `bg-education` / `bg-educationSubtle` - Educational backgrounds
+
+**Semantic Text Colors:**
+
+- `text-primary` - Primary text (highest contrast)
+- `text-secondary` - Secondary text (medium contrast)
+- `text-tertiary` - Tertiary text (lower contrast)
+- `text-quaternary` - Quaternary text (lowest contrast)
+- `text-accent` - Accent text
+- `text-on-accent` - Text on accent backgrounds
+- `text-danger` / `text-dangerOnDanger` - Error/danger text
+- `text-success` / `text-successOnSuccess` - Success text
+- `text-warning` / `text-warningOnWarning` - Warning text
+- `text-education` / `text-educationOnEducation` - Educational text
+- `text-on-inverse-primary` / `text-on-inverse-secondary` - Text on inverse backgrounds
+
+**Semantic Border Colors:**
+
+- `border-primary` - Primary borders
+- `border-secondary` - Secondary borders
+- `border-tertiary` - Tertiary borders
+- `border-accent` - Accent borders
+- `border-education` - Educational borders
+- `border-error` - Error borders
+- `border-success` - Success borders
+- `border-warning` - Warning borders
+
+**Palette Colors (when semantic colors don't fit):**
+
+- `bg-neutral-{50-950}` / `text-neutral-{50-950}` - Neutral grays
+- `bg-accent-{50-950}` / `text-accent-{50-950}` - Accent purple palette
+- `bg-red-{50-950}` / `text-red-{50-950}` - Red palette
+- `bg-green-{50-950}` / `text-green-{50-950}` - Green palette
+- `bg-blue-{50-950}` / `text-blue-{50-950}` - Blue palette
+- `bg-yellow-{50-950}` / `text-yellow-{50-950}` - Yellow palette
+
+**Brand Colors (for specific brand usage):**
+
+- `bg-brand-{color}` / `text-brand-{color}` - Brand palette colors
+- Available: apple, canopy, chartreuse, currant, dahlia, felt, forest, goldenrod, heather, hydrangea, iris, lavender, lichen, moss, orchid, pansy, poppy, root, rose, shade, sky, slate, chalk, charcoal, concrete, marble, pebble, sand, stone
+
+#### Color Replacement Rules:
+
+**NEVER use these combinations - replace with arbor tokens:**
+
+❌ **Don't use:**
+
+```css
+text-gray-600
+text-gray-500
+text-gray-400
+text-slate-700
+text-slate-600
+bg-gray-50
+bg-gray-100
+bg-gray-200
+bg-white
+bg-black
+text-blue-600
+text-red-500
+text-green-600
+border-gray-200
+border-gray-300
+```
+
+✅ **Use instead:**
+
+```css
+text-secondary
+text-tertiary
+text-quaternary
+text-primary
+text-secondary
+bg-primary
+bg-secondary
+bg-tertiary
+bg-elevated
+bg-inverse
+text-blue-600 (if no semantic equivalent)
+text-danger
+text-success
+border-secondary
+border-primary
+```
+
+#### Implementation Guidelines:
+
+1. **Semantic First:** Always prefer semantic colors (`text-primary`, `bg-primary`) over palette colors
+2. **When creating new components:** Use arbor color classes from the start
+3. **When editing existing components:** Replace individual color utilities with arbor tokens
+4. **Palette colors:** Only use when semantic colors don't provide the right meaning
+5. **Brand colors:** Only use for brand-specific elements, not general UI
+6. **Dark mode:** Arbor colors automatically adapt to dark mode via CSS variables
+
+#### Example Transformations:
+
+```tsx
+// Before
+<div className="bg-white text-gray-900 border-gray-200">
+  <h2 className="text-gray-800">Title</h2>
+  <p className="text-gray-600">Description text</p>
+  <button className="bg-blue-600 text-white">Action</button>
+</div>
+
+// After
+<div className="bg-primary text-primary border-primary">
+  <h2 className="text-primary">Title</h2>
+  <p className="text-secondary">Description text</p>
+  <button className="bg-accent text-on-accent">Action</button>
+</div>
+```
+
+```tsx
+// Before
+<div className="text-red-500 bg-red-50">
+  Error message
+</div>
+
+// After
+<div className="text-danger bg-dangerSubtle">
+  Error message
+</div>
+```
+
+```tsx
+// Before
+<input className="border-gray-300 focus:border-blue-500" />
+
+// After
+<input className="border-secondary focus:border-accent" />
+```
+
+## Shadow Guidelines
+
+### Use Arbor Design System Shadow Elevation Classes
+
+**ALWAYS** prefer arbor shadow elevation tokens over hardcoded shadow values.
+
+#### Available Arbor Shadow Elevation Classes:
+
+- `shadow-elevation-100` - Subtle shadow for buttons, small interactive elements
+- `shadow-elevation-200` - Medium shadow for panels, cards, dropdowns
+- `shadow-elevation-300` - Prominent shadow for floating elements like compose bars
+- `shadow-elevation-400` - Heavy shadow for modals, popovers, overlays
+
+#### Shadow Replacement Rules:
+
+**NEVER use these combinations - replace with arbor tokens:**
+
+❌ **Don't use:**
+
+```css
+shadow-sm
+shadow-md
+shadow-lg
+shadow-xl
+shadow-2xl
+shadow-[0px_4px_16px_rgba(0,0,0,0.08)]
+shadow-[0_1px_2px_0_rgb(0_0_0/0.05)]
+```
+
+✅ **Use instead:**
+
+```css
+shadow-elevation-100
+shadow-elevation-200
+shadow-elevation-300
+shadow-elevation-400
+```
+
+#### Implementation Guidelines:
+
+1. **When creating new components:** Always use arbor shadow elevation classes from the start
+2. **When editing existing components:** Replace individual shadow utilities with arbor tokens
+3. **Choose elevation based on visual hierarchy:** Higher numbers = more prominent elements
+4. **Consistency:** Use the same elevation level for similar UI patterns across the app
+
+#### Example Transformations:
+
+```tsx
+// Before
+<div className="bg-white rounded-lg shadow-md">
+  Card content
+</div>
+
+// After
+<div className="bg-elevated rounded-lg shadow-elevation-200">
+  Card content
+</div>
+```
+
+```tsx
+// Before
+<button className="bg-white rounded-full shadow-sm">
+  <IconComponent />
+</button>
+
+// After
+<button className="bg-elevated rounded-full shadow-elevation-100">
+  <IconComponent />
+</button>
+```
+
+```tsx
+// Before
+<div className="bg-white rounded-xl shadow-[0px_0px_0px_1px_rgba(0,0,0,0.04),0px_4px_16px_0px_rgba(0,0,0,0.08)]">
+  Compose bar
+</div>
+
+// After
+<div className="bg-elevated rounded-xl shadow-elevation-300">
+  Compose bar
+</div>
+```
+
+## Design System Integration
+
+This project uses:
+
+- **@linktr.ee/arbor** - Design system components and tokens
+- **@linktr.ee/design-tokens** - Color and spacing tokens
+- **Tailwind CSS** - Utility classes for layout, spacing, borders, etc.
+
+### Priority Order:
+
+1. Arbor typography tokens (for font properties)
+2. Arbor semantic color tokens (for colors with meaning)
+3. Arbor shadow elevation tokens (for shadows)
+4. Arbor palette colors (when semantic colors don't fit)
+5. Tailwind utilities (for layout, spacing, borders, etc.)
+
+## Code Quality
+
+- Always maintain existing functionality when refactoring typography and colors
+- Preserve all non-design-system classes (layout, spacing, etc.)
+- Test visual consistency after typography and color changes
+- Use semantic HTML elements with appropriate ARIA labels
+- Follow the existing code patterns and naming conventions
+- Prefer semantic color names over palette colors for better maintainability
+- Ensure proper contrast ratios are maintained when using arbor colors
+- Test components in both light and dark modes when using arbor tokens
+
+## File Organization
+
+- Components should be in `/components/` directory
+- Export components from `/components/index.ts` when appropriate
+- Use TypeScript interfaces for component props
+- Follow the existing import/export patterns

@@ -1,0 +1,1 @@
+export { MediaKitProfile } from './MediaKitProfile';
