@@ -10,7 +10,6 @@
   font-weight: 300 900;
   font-style: normal;
   font-display: swap;
-  font-variation-settings: 'PRDT' 300;
 }
 @layer base {
   :root {

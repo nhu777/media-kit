@@ -13,6 +13,8 @@ import {
 import Image from 'next/image';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+import { isGlossierLogo } from './brandPartnershipsData';
+
 export const MEDIA_KIT_ACCENT = '#eef4e4';
 /** Corner radius for green accent stat surfaces. */
 export const MEDIA_KIT_ACCENT_RADIUS_CLASS = 'rounded-[16px]';
@@ -56,25 +58,45 @@ const PLATFORMS: { id: Platform; label: string; icon: React.ElementType }[] = [
   { id: 'youtube', label: 'YouTube', icon: YoutubeLogoIcon },
 ];
 
+export const MEDIA_KIT_PLATFORMS: Platform[] = PLATFORMS.map(
+  platform => platform.id
+);
+
 interface PlatformPillTabsProps {
   active: Platform;
   onChange?: (platform: Platform) => void;
+  platforms?: Platform[];
+  disabledPlatforms?: Platform[];
 }
 
-export function PlatformPillTabs({ active, onChange }: PlatformPillTabsProps) {
+export function PlatformPillTabs({
+  active,
+  onChange,
+  platforms = MEDIA_KIT_PLATFORMS,
+  disabledPlatforms = [],
+}: PlatformPillTabsProps) {
+  const visiblePlatforms = PLATFORMS.filter(({ id }) => platforms.includes(id));
+  const disabledPlatformSet = new Set(disabledPlatforms);
+
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {PLATFORMS.map(({ id, label, icon: Icon }) => {
+      {visiblePlatforms.map(({ id, label, icon: Icon }) => {
         const isActive = active === id;
+        const isDisabled = disabledPlatformSet.has(id);
+
         return (
           <button
             key={id}
             type="button"
             onClick={() => onChange?.(id)}
             className={`flex items-center gap-1 rounded-full px-3 py-2 text-body-xs-emph transition-colors ${
-              isActive
-                ? 'bg-inverse text-on-inverse-primary'
-                : 'border border-white/10 text-primary'
+              isDisabled
+                ? isActive
+                  ? 'border border-white/10 bg-white/5 text-tertiary opacity-50'
+                  : 'border border-white/10 text-tertiary opacity-40'
+                : isActive
+                  ? 'bg-inverse text-on-inverse-primary'
+                  : 'border border-white/10 text-primary'
             }`}
           >
             <Icon size={16} weight="regular" />
@@ -1400,7 +1422,7 @@ export function CollaborationCarousel({
 }) {
   return (
     <div
-      className={`flex min-w-0 gap-2 overflow-x-auto scrollbar-hide ${MEDIA_KIT_SURFACE_BLEED_CLASS} ${MEDIA_KIT_SURFACE_GUTTER_CLASS}`}
+      className={`flex min-w-0 gap-2 overflow-x-auto scrollbar-hide ${MEDIA_KIT_SURFACE_BLEED_CLASS}`}
       style={{
         scrollPaddingInline: MEDIA_KIT_SURFACE_GUTTER,
         WebkitOverflowScrolling: 'touch',
@@ -1408,7 +1430,9 @@ export function CollaborationCarousel({
         overscrollBehaviorX: 'contain',
       }}
     >
+      <div aria-hidden className="w-4 shrink-0" />
       {children}
+      <div aria-hidden className="w-4 shrink-0" />
     </div>
   );
 }
@@ -1471,52 +1495,44 @@ function CollaborationPlatformIcon({ platform }: { platform: Platform }) {
 
 interface CollaborationPostProps {
   image: string;
-  brandLogo: string;
-  brandName: string;
   platform: Platform;
 }
 
-export function CollaborationPost({
-  image,
-  brandLogo,
-  brandName,
-  platform,
-}: CollaborationPostProps) {
+export function CollaborationPost({ image, platform }: CollaborationPostProps) {
   return (
-    <div className="flex w-[128px] shrink-0 flex-col gap-3">
+    <div className="flex w-[128px] shrink-0 flex-col">
       <div
         className={`relative flex h-[186px] w-[128px] flex-col items-end overflow-hidden p-2 ${MEDIA_KIT_ACCENT_RADIUS_CLASS}`}
       >
-        <Image src={image} alt={brandName} fill className="object-cover" />
+        <Image src={image} alt="" fill className="object-cover" />
         <div className="relative z-[1] flex shrink-0 items-center overflow-hidden rounded-[34px] bg-black/50 p-1">
           <CollaborationPlatformIcon platform={platform} />
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="relative size-[28px] shrink-0">
-          <Image
-            src={brandLogo}
-            alt={brandName}
-            fill
-            className="object-cover rounded-full"
-          />
-        </div>
-        <span className="text-body-sm-emph text-primary">{brandName}</span>
       </div>
     </div>
   );
 }
 
 interface BrandMentionGridProps {
-  logos: string[];
+  brands: Array<{ id: string; logo: string }>;
 }
 
-export function BrandMentionGrid({ logos }: BrandMentionGridProps) {
+export function BrandMentionGrid({ brands }: BrandMentionGridProps) {
   return (
-    <div className="flex flex-wrap justify-between gap-y-3 w-full">
-      {logos.map((logo, i) => (
-        <div key={i} className="relative size-[68px] shrink-0">
-          <Image src={logo} alt="" fill className="object-cover rounded-full" />
+    <div className="grid w-full grid-cols-4 gap-4">
+      {brands.map(brand => (
+        <div
+          key={brand.id}
+          className={`relative aspect-square w-full overflow-hidden rounded-full${
+            isGlossierLogo(brand.logo) ? ' border border-secondary' : ''
+          }`}
+        >
+          <Image
+            src={brand.logo}
+            alt=""
+            fill
+            className="rounded-full object-cover"
+          />
         </div>
       ))}
     </div>

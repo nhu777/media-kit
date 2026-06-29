@@ -4,9 +4,11 @@ import {
   ArrowsCounterClockwiseIcon,
   ChartLineUpIcon,
   CursorClickIcon,
+  EyeClosedIcon,
   EyesIcon,
   InfoIcon,
   InstagramLogoIcon,
+  LockIcon,
   TicketIcon,
   TiktokLogoIcon,
   UsersThreeIcon,
@@ -14,6 +16,8 @@ import {
 } from '@phosphor-icons/react';
 import Image from 'next/image';
 import React from 'react';
+
+import { cn } from '@/lib/utils';
 
 import type {
   PerformanceCardData,
@@ -102,15 +106,23 @@ function PerformanceCardShell({
   label,
   highlight,
   onInfoClick,
+  hidden = false,
+  locked = false,
+  showHighlight = true,
   children,
 }: {
   label: string;
   highlight: string;
   onInfoClick?: () => void;
+  hidden?: boolean;
+  locked?: boolean;
+  showHighlight?: boolean;
   children: React.ReactNode;
 }) {
+  const showOverlay = hidden || locked;
+
   return (
-    <article className={PERFORMANCE_CARD_CLASS}>
+    <article className={cn(PERFORMANCE_CARD_CLASS, showOverlay && 'relative')}>
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <p className="text-body-xs text-secondary">{label}</p>
@@ -123,14 +135,35 @@ function PerformanceCardShell({
             <InfoIcon size={24} weight="regular" />
           </button>
         </div>
-        <div
-          className={`p-4 ${MEDIA_KIT_ACCENT_RADIUS_CLASS}`}
-          style={{ backgroundColor: MEDIA_KIT_ACCENT }}
-        >
-          <p className="text-body-lg-emph text-primary">{highlight}</p>
-        </div>
+        {showHighlight ? (
+          <div
+            className={`p-4 ${MEDIA_KIT_ACCENT_RADIUS_CLASS}`}
+            style={{ backgroundColor: MEDIA_KIT_ACCENT }}
+          >
+            <p className="text-body-lg-emph text-primary">{highlight}</p>
+          </div>
+        ) : null}
       </div>
       {children}
+      {showOverlay ? (
+        <>
+          <div
+            className="pointer-events-none absolute inset-0 rounded-[20px] bg-white/20 backdrop-blur-[7px]"
+            aria-hidden
+          />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            {locked ? (
+              <LockIcon size={48} weight="regular" className="text-secondary" />
+            ) : (
+              <EyeClosedIcon
+                size={48}
+                weight="regular"
+                className="text-secondary"
+              />
+            )}
+          </div>
+        </>
+      ) : null}
     </article>
   );
 }
@@ -170,15 +203,24 @@ function IconStatBlock({ stat }: { stat: PerformanceIconStat }) {
 export function PerformanceCard({
   data,
   onInfoClick,
+  hidden = false,
+  locked = false,
+  showHighlight = true,
 }: {
   data: PerformanceCardData;
   onInfoClick?: () => void;
+  hidden?: boolean;
+  locked?: boolean;
+  showHighlight?: boolean;
 }) {
   return (
     <PerformanceCardShell
       label={data.label}
       highlight={data.highlight}
       onInfoClick={onInfoClick}
+      hidden={hidden}
+      locked={locked}
+      showHighlight={showHighlight}
     >
       <div className="flex flex-1 flex-col gap-3">
         {data.topLinks && (

@@ -1,0 +1,3 @@
+export const EDITOR_COMPACT_BREAKPOINT_PX = 1024;
+export const EDITOR_DESIGN_WIDTH = 500;
+export const EDITOR_EDGE_MARGIN_PX = 16;

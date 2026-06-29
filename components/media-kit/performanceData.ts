@@ -15,6 +15,56 @@ export const PERFORMANCE_TABS: { id: PerformanceMetric; label: string }[] = [
   { id: 'traffic', label: 'Traffic' },
 ];
 
+export const DEFAULT_PERFORMANCE_METRIC_ORDER: PerformanceMetric[] = [
+  'ctr',
+  'engagement',
+  'retention',
+  'sales',
+  'traffic',
+];
+
+export function reorderPerformanceMetrics(
+  order: PerformanceMetric[],
+  activeId: PerformanceMetric,
+  overId: PerformanceMetric
+): PerformanceMetric[] {
+  const oldIndex = order.indexOf(activeId);
+  const newIndex = order.indexOf(overId);
+
+  if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) {
+    return order;
+  }
+
+  const next = [...order];
+  const [moved] = next.splice(oldIndex, 1);
+  next.splice(newIndex, 0, moved!);
+
+  return next;
+}
+
+export function getOrderedPerformanceTabs(order: PerformanceMetric[]) {
+  return order
+    .map(id => PERFORMANCE_TABS.find(tab => tab.id === id))
+    .filter(
+      (tab): tab is (typeof PERFORMANCE_TABS)[number] => tab !== undefined
+    );
+}
+
+export function performanceMetricToOrderedIndex(
+  metric: PerformanceMetric,
+  order: PerformanceMetric[]
+): number {
+  const index = order.indexOf(metric);
+  return index === -1 ? 0 : index;
+}
+
+export function orderedIndexToPerformanceMetric(
+  index: number,
+  order: PerformanceMetric[]
+): PerformanceMetric {
+  return order[index] ?? order[0] ?? 'ctr';
+}
+
 export function performanceMetricToIndex(metric: PerformanceMetric): number {
   return PERFORMANCE_TABS.findIndex(tab => tab.id === metric);
 }
@@ -142,3 +192,9 @@ export const PERFORMANCE_CARDS: PerformanceCardData[] = [
     ],
   },
 ];
+
+export function getOrderedPerformanceCards(order: PerformanceMetric[]) {
+  return order
+    .map(id => PERFORMANCE_CARDS.find(card => card.id === id))
+    .filter((card): card is PerformanceCardData => card !== undefined);
+}
